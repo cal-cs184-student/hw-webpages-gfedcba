@@ -57,11 +57,11 @@
 			  <tr>
 				<td style="text-align: center;">
 				  <img src="let_184.PNG" width="400px"/>
-				  <figcaption>Three line test from lecture (repeat for other edges to find the intersection).</figcaption>
+				  <figcaption><strong>Figure 1.1: </strong>Three line test from lecture (repeat for other edges to find the intersection).</figcaption>
 				</td>
 				<td style="text-align: center;">
 				  <img src="task1.png" width="400px"/>
-				  <figcaption>Output for a simple rasterizer with no supersampling. Notice the jaggies generated on the green triangle to the left.</figcaption>
+				  <figcaption><strong>Figure 1.2: </strong>Output for a simple rasterizer with no supersampling. Notice the jaggies generated on the green triangle to the left.</figcaption>
 				</td>
 			  </tr>
 			</table>
@@ -130,8 +130,13 @@
 		<p>Note that because we are calculating for 3 weights, we shift to a <code>Vector3D</code> with the same x and y coordinates, but with a z set to 1. This allows us to get the \(\gamma\) term back when calculating the weights i.e. we just subtract 1 from <code>w.x</code> and <code>w.y</code>.</p>
 		
 		<figure>
-			<img src="task4.png" alt="gradient circle" style="width:50%"/>
-			<figcaption><strong>Figure 4: </strong>Color wheel rendered with interpolated color vertices within each triangle.</figcaption>
+			<img src="task4_1.png" alt="gradient triangle" style="width:50%"/>
+			<figcaption><strong>Figure 4.1: </strong>Triangle with interpolated colors.</figcaption>
+		</figure>
+
+		<figure>
+			<img src="task4_2.png" alt="gradient circle" style="width:50%"/>
+			<figcaption><strong>Figure 4.2: </strong>Color wheel rendered with interpolated color vertices within each triangle.</figcaption>
 		</figure>
 
 		<h2>Task 5: "Pixel sampling" for texture mapping</h2>
@@ -166,6 +171,7 @@
 		<p>Above, we can see the differences between the two pixel sampling methods. Zooming in on the top of the Campanile, we can see the contrast in artifacts when viewing the columns and their gaps. Supersampling in both cases improves image quality, with not much noticeable difference. Theoretically, the difference between the two will be most apparent in high-frequency images with sudden transitions. We can see this in our images, where bilinear had a smoother transition between the columns compared to the nearest pixel when sampling at a rate of 1. This occurs since nearest pixel just picks the texel closest to it, leading to a more visible boundary, whereas bilinear attempts to interpolate between the four nearest texels for a smoother transition.		</p>
 
 		<h2>Task 6: "Level Sampling" with mipmaps for texture mapping</h2>
+		<p>Mipmaps are a series of progressively downsampled versions of a texture, with each level representing a smaller, averaged version of the original texture. Through level sampling, we select the appropriate mipmap level when mapping a texture to screen space with the goal of minimizing aliasing, especially during minification, where many texels can contribute to a pixel footprint.</p>
 		<p>To implement level sampling for texture mapping, we define three sampling methods: L_ZERO, L_NEAREST, and L_LINEAR. When lsm == L_ZERO, the sampler simply fetches the texel from the zero-th mipmap level, as done in Part 5. For lsm == L_NEAREST, we compute the appropriate mipmap level by evaluating the mipmap size using the texture's UV coordinates, selecting the closest level for sampling. In the case of lsm == L_LINEAR, the method computes a continuous mipmap level by interpolating between the adjacent mipmap levels, and samples from them accordingly to produce a weighted average.</p>
 		<p>To calculate the correct mipmap level, we compute the Jacobian (dudx, dvdx, dudy, and dvdy) of the UV coordinates, as seen from lecture. These derivatives are passed to get_level through a SampleParams struct, which contains the necessary barycentric coordinates and other values. Inside get_level, the difference vectors (p_dx_uv - p_uv and p_dy_uv - p_uv) are calculated, and then scaled by the texture dimensions to determine the appropriate mipmap level. The level is then returned and used to sample the texture at that level.</p>
 		
